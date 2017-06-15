@@ -3,6 +3,8 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -23,10 +25,13 @@ public class BoggleScherm extends Application{
     private int height = 500;
     Scene scene;
     BoggleButton[][] BoggleArray = new BoggleButton[boardSize][boardSize];
-    private Pane window;
+    private VBox window;
     private  HBox boggleButtons;
     private char[] characters;
     Group lineGroup = new Group();
+    Label timer = new Label("UND");
+    Button startTimer = new Button("Start");
+    HBox timerBox = new HBox(timer, startTimer);
 
     @Override
     public void start(Stage PrimaryStage){
@@ -35,7 +40,11 @@ public class BoggleScherm extends Application{
         this.generateCharacters();
         this.boggleButtons = this.makeBoggleScherm();
         Pane boggleScherm = new Pane(boggleButtons, lineGroup);
-        this.window = new Pane(boggleScherm);
+        this.window = new VBox(this.timerBox, boggleScherm);
+        this.timerBox.setSpacing((this.boardSize - 2) * this.buttonSpacing + (this.boardSize - 2) * this.buttonSize);
+        timerBox.setAlignment(Pos.CENTER);
+        this.window.setAlignment(Pos.CENTER);
+        this.window.setSpacing(this.buttonSpacing);
         this.scene = new Scene(this.getCentered(window), this.width, this.height);
         PrimaryStage.setScene(scene);
         PrimaryStage.show();
@@ -51,7 +60,11 @@ public class BoggleScherm extends Application{
         this.generateCharacters();
         this.boggleButtons = this.makeBoggleScherm();
         Pane boggleScherm = new Pane(boggleButtons, lineGroup);
-        this.window = new Pane(boggleScherm);
+        this.window = new VBox(this.timerBox, boggleScherm);
+        this.timerBox.setSpacing((this.boardSize - 2) * this.buttonSpacing + (this.boardSize - 2) * this.buttonSize);
+        timerBox.setAlignment(Pos.CENTER);
+        this.window.setAlignment(Pos.CENTER);
+        this.window.setSpacing(this.buttonSpacing);
         this.scene = new Scene(this.getCentered(window), this.width, this.height);
         PrimaryStage.setScene(scene);
         PrimaryStage.show();
