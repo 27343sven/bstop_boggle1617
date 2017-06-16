@@ -5,22 +5,20 @@ import os
 from optparse import OptionParser
 
 def connect(options):
-    conn_string = "host='localhost' dbname='bpcogs' user='sven'" \
-                  " password='bpcogs1617'"
-    conn_string = "host='{}' dbname='{}' user='{}' password='{}'".format(options.host, options.database, options.user, options.password)
+	conn_string = "host='{}' dbname='{}' user='{}' password='{}'".format(options.host, options.database, options.user, options.password)
 
-    try:
-        conn = psycopg2.connect(conn_string)
-    except psycopg2.Error as e:
-        print("Unable to connect to database {} on {} with user {}.".format(options.database, options.host, options.user))
-        #print(e.pgerror)
-        #print(e.diag.message_detail)
-        sys.exit(1)
-    else:
-        print("Connected to database {} on {} with user {}.".format(options.database, options.host, options.user))
-        cursor = conn.cursor()
+	try:
+		conn = psycopg2.connect(conn_string)
+	except psycopg2.Error as e:
+		print("Unable to connect to database {} on {} with user {}.".format(options.database, options.host, options.user))
+		#print(e.pgerror)
+		#print(e.diag.message_detail)
+		sys.exit(1)
+	else:
+		print("Connected to database {} on {} with user {}.".format(options.database, options.host, options.user))
+		cursor = conn.cursor()
 
-    return conn, cursor
+	return conn, cursor
 
 def get_arguments():
 	parser = OptionParser(usage="usage: %prog [options] filename")
@@ -47,29 +45,29 @@ def create_database(conn, cursor):
 	drop_db(conn, cursor)
 
 	cursor.execute(
-        "CREATE TABLE SPELER ("
-        "Id INTEGER,"
-        "Naam VARCHAR (10),"
-        "Datum DATE,"
-        "Tijd TIME,"
-	    "CONSTRAINT pk_id PRIMARY KEY (Id))"
-	    )
+		"CREATE TABLE SPELER ("
+		"Id INTEGER,"
+		"Naam VARCHAR (10),"
+		"Datum DATE,"
+		"Tijd TIME,"
+		"CONSTRAINT pk_id PRIMARY KEY (Id))"
+		)
 
 	cursor.execute(
-        "CREATE TABLE WOORD ("
-        "woord VARCHAR(25),"
-        "Score SMALLINT,"
-	    "CONSTRAINT pk_woord PRIMARY KEY (woord))"
-	    )
+		"CREATE TABLE WOORD ("
+		"woord VARCHAR(25),"
+		"Score SMALLINT,"
+		"CONSTRAINT pk_woord PRIMARY KEY (woord))"
+		)
 
 	cursor.execute(
-        "CREATE TABLE SPELERWOORD ("
-        "Speler_Id INTEGER,"
-        "woord VARCHAR(25),"
-	    "CONSTRAINT pk_spelerwoord PRIMARY KEY (Speler_Id, woord),"
-	    "CONSTRAINT fk_speler_id FOREIGN KEY (Speler_Id) REFERENCES SPELER(Id),"
-	    "CONSTRAINT fk_woord FOREIGN KEY (woord) REFERENCES WOORD(woord))"
-	    )
+		"CREATE TABLE SPELERWOORD ("
+		"Speler_Id INTEGER,"
+		"woord VARCHAR(25),"
+		"CONSTRAINT pk_spelerwoord PRIMARY KEY (Speler_Id, woord),"
+		"CONSTRAINT fk_speler_id FOREIGN KEY (Speler_Id) REFERENCES SPELER(Id),"
+		"CONSTRAINT fk_woord FOREIGN KEY (woord) REFERENCES WOORD(woord))"
+		)
 
 	conn.commit()
 
@@ -90,7 +88,7 @@ def get_woord_score(woord):
 def fill_woorden(conn, cursor, args):
 	file = open(args[0], "r")
 	woorden = list(set([x[:-1] for x in file.readlines()]))
-	print("Woorden toevoegen.")
+	print("Woorden toevoegen...")
 	for i in range(len(woorden)):
 		if woorden[i] != "" and len(woorden[i]) < 26:
 			cursor.execute(
@@ -102,12 +100,12 @@ def fill_woorden(conn, cursor, args):
 	print("Woorden toegevoegd.")
 
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
-    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
-    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
-    if iteration == total: 
-        print()
+	percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+	filledLength = int(length * iteration // total)
+	bar = fill * filledLength + '-' * (length - filledLength)
+	print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
+	if iteration == total: 
+		print()
 
 def main():
 	options, args = get_arguments()
