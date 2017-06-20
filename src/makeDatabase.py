@@ -2,7 +2,30 @@
 import sys
 import psycopg2
 import os
+from time import sleep
 from optparse import OptionParser
+
+
+class progressBar:
+	def __init__(self, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
+		self.total = total
+		self.prefix = prefix
+		self.suffix = suffix
+		self.decimals = decimals
+		self.length = length
+		self.fill = fill
+		self.currentPercent = -1
+
+	def drawBar(self, iteration):
+		percent = 100 * (iteration / float(self.total))
+		if percent > self.currentPercent:
+			self.currentPercent = percent
+			percent = ("{0:." + str(self.decimals) + "f}").format(percent)
+			filledLength = int(self.length * iteration // self.total)
+			bar = self.fill * filledLength + '-' * (self.length - filledLength)
+			print('\r%s |%s| %s%% %s' % (self.prefix, bar, percent, self.suffix), end = '\r')
+			if iteration == self.total: 
+				print()
 
 def connect(options):
 	conn_string = "host='{}' dbname='{}' user='{}' password='{}'".format(options.host, options.database, options.user, options.password)
@@ -89,13 +112,14 @@ def fill_woorden(conn, cursor, args):
 	file = open(args[0], "r")
 	woorden = list(set([x[:-1] for x in file.readlines()]))
 	print("Woorden toevoegen...")
+	progress = progressBar(len(woorden) - 1)
 	for i in range(len(woorden)):
 		if woorden[i] != "" and len(woorden[i]) < 26:
 			cursor.execute(
 				"INSERT INTO WOORD VALUES('{}', {})".format(woorden[i], get_woord_score(woorden[i]))
 			)
-			printProgressBar(i, len(woorden))
-	print()
+			#printProgressBar(i, len(woorden) - 1)
+			progress.drawBar(i)
 	conn.commit()
 	print("Woorden toegevoegd.")
 
@@ -118,3 +142,4 @@ def main():
 	conn.close()
 
 main()
+
