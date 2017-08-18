@@ -26,7 +26,7 @@ class Sql {
     public void select(String query, boolean debug) {
         try {
             this.results = this.conn.prepareStatement(query).executeQuery();
-            getResults();
+            saveResults();
             if (debug){
                 printResults();
             }
@@ -38,7 +38,7 @@ class Sql {
     public void select(String query) {
         try {
             this.results = this.conn.prepareStatement(query).executeQuery();
-            getResults();
+            this.saveResults();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -46,6 +46,10 @@ class Sql {
 
     public int getRowCount(){
         return this.rows;
+    }
+
+    public ArrayList<String[]> getResults(){
+        return this.resultArray;
     }
 
     private void reset(){
@@ -68,7 +72,8 @@ class Sql {
         }
     }
 
-    private void getResults() throws SQLException {
+
+    private void saveResults() throws SQLException {
         ResultSetMetaData metaData = this.results.getMetaData();
         int columns = metaData.getColumnCount();
         int currrentRow = 0;

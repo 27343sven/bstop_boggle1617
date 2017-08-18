@@ -5,9 +5,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -21,31 +24,27 @@ public class BoggleScherm extends Application{
     private int boardSize = 5;
     private int buttonSpacing = 20;
     private int buttonSize = 50;
-    private int width = 500;
+    private int width = 900;
     private int height = 500;
+    private int geradenWoordenWidth = 250;
     Scene scene;
-    BoggleButton[][] BoggleArray = new BoggleButton[boardSize][boardSize];
-    private VBox window;
+    BoggleButton[][] BoggleArray;
+    private VBox gameBox;
+    private HBox window;
     private  HBox boggleButtons;
     private char[] characters;
     Group lineGroup = new Group();
     Label timer = new Label("UND");
     Button startTimer = new Button("Start");
+    Label woordLabel = new Label("");
+    ScrollPane geradenWoordenPane = new ScrollPane();
     HBox timerBox = new HBox(timer, startTimer);
+    Label totalScore = new Label("Score: 0");
+    Label speler = new Label("Speler: UND");
 
     @Override
     public void start(Stage PrimaryStage){
-
-        this.characters = new char[boardSize * boardSize];
-        this.generateCharacters();
-        this.boggleButtons = this.makeBoggleScherm();
-        Pane boggleScherm = new Pane(boggleButtons, lineGroup);
-        this.window = new VBox(this.timerBox, boggleScherm);
-        this.timerBox.setSpacing((this.boardSize - 2) * this.buttonSpacing + (this.boardSize - 2) * this.buttonSize);
-        timerBox.setAlignment(Pos.CENTER);
-        this.window.setAlignment(Pos.CENTER);
-        this.window.setSpacing(this.buttonSpacing);
-        this.scene = new Scene(this.getCentered(window), this.width, this.height);
+        this.startProcedure();
         PrimaryStage.setScene(scene);
         PrimaryStage.show();
     }
@@ -56,18 +55,28 @@ public class BoggleScherm extends Application{
         this.buttonSpacing = buttonSpacing;
         this.width = width;
         this.height = height;
+        this.startProcedure();
+        PrimaryStage.setScene(scene);
+        PrimaryStage.show();
+    }
+
+    private void startProcedure(){
+        this.woordLabel.setFont(new Font(25));
+        this.BoggleArray = new BoggleButton[boardSize][boardSize];
         this.characters = new char[boardSize * boardSize];
         this.generateCharacters();
         this.boggleButtons = this.makeBoggleScherm();
         Pane boggleScherm = new Pane(boggleButtons, lineGroup);
-        this.window = new VBox(this.timerBox, boggleScherm);
+        this.gameBox = new VBox(this.timerBox, this.woordLabel, boggleScherm);
+        this.window = new HBox(gameBox, new VBox(geradenWoordenPane, this.totalScore, this.speler));
         this.timerBox.setSpacing((this.boardSize - 2) * this.buttonSpacing + (this.boardSize - 2) * this.buttonSize);
-        timerBox.setAlignment(Pos.CENTER);
-        this.window.setAlignment(Pos.CENTER);
-        this.window.setSpacing(this.buttonSpacing);
-        this.scene = new Scene(this.getCentered(window), this.width, this.height);
-        PrimaryStage.setScene(scene);
-        PrimaryStage.show();
+        this.timerBox.setAlignment(Pos.CENTER);
+        this.gameBox.setAlignment(Pos.CENTER);
+        this.gameBox.setSpacing(this.buttonSpacing);
+        this.window.setSpacing(this.width * 0.20);
+        this.geradenWoordenPane.setMinWidth(this.geradenWoordenWidth);
+        this.geradenWoordenPane.setMinHeight(this.height - 50);
+        this.scene = new Scene(UtilLib.getCentered(window), this.width, this.height);
     }
 
     private HBox makeBoggleScherm(){
@@ -90,26 +99,31 @@ public class BoggleScherm extends Application{
         return(boggleButtons);
     }
 
-    private HBox getCentered(Pane pane){
-        VBox vb = new VBox(pane);
-        vb.setAlignment(Pos.CENTER);
-        HBox hb = new HBox(vb);
-        hb.setAlignment(Pos.CENTER);
-        return hb;
+    public void setLettersHidden(boolean isHidden){
+        for (int i = 0; i < this.BoggleArray.length; i++) {
+            for (int j = 0; j < this.BoggleArray[i].length; j++) {
+                if (isHidden){
+                    this.BoggleArray[i][j].setText("");
+                } else {
+                    this.BoggleArray[i][j].setText(Character.toString(this.characters[i + j * this.boardSize]));
+                }
+            }
+        }
     }
 
     private void generateCharacters(){
         ArrayList<Character> tempCharacters = new ArrayList<Character>();
         char[] vowel = { 'a', 'e', 'i', 'o', 'u' };
-        char[] constant = {
-                'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'
+        char[] all = {
+                'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z',
+                'a', 'e', 'i', 'o', 'u'
         };
         Random random = new Random();
         for (int i = 0; i < this.boardSize * this.boardSize; i++) {
             if (i < this.boardSize){
                 tempCharacters.add(vowel[random.nextInt(vowel.length)]);
             } else {
-                tempCharacters.add(constant[random.nextInt(constant.length)]);
+                tempCharacters.add(all[random.nextInt(all.length)]);
             }
         }
         Collections.shuffle(tempCharacters);
