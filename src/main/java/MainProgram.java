@@ -55,7 +55,7 @@ public class MainProgram extends Application {
 
     private void bindScoreScherm(){
         this.scoreScherm.afsluitButton.setOnAction(e -> Platform.exit());
-        this.scoreScherm.menuButton.setOnAction(e -> this.beginScherm.start(this.PrimaryStage));
+        this.scoreScherm.menuButton.setOnAction(e -> this.onEndMenuButton());
     }
 
     private void bindBeginScherm(){
@@ -102,6 +102,11 @@ public class MainProgram extends Application {
         this.woordenToevoegScherm.statusLabel.setText(this.game.addWoord(this.woordenToevoegScherm.text.getText()));
     }
 
+    private void onEndMenuButton(){
+        this.game.reset();
+        this.beginScherm.start(this.PrimaryStage);
+    }
+
 
     private void onStartButton(){
         String[] names = new String[this.optieScherm.players];
@@ -117,6 +122,8 @@ public class MainProgram extends Application {
         this.bindBoggleScherm();
         this.game.setUniekeWoorden(this.spelerNaamScherm.uniekCheck.isSelected());
         boggleScherm.setLettersHidden(true);
+        this.updateSpeler();
+        this.updateGeradenWoorden();
     }
 
     private void onVolgendeButton(){
@@ -176,21 +183,21 @@ public class MainProgram extends Application {
         this.scoreScherm.start(this.PrimaryStage);
         if (this.game.getSpelers().length > 1) {
             ArrayList<String[]> scores = this.game.getTotalScore();
-            this.scoreScherm.mainLabel.setText(String.format("Winnaar: %s", scores.get(0)[0]));
+            this.scoreScherm.mainLabel.setText(String.format("Winnaar: %s\n", scores.get(0)[0]));
             StringBuilder text = new StringBuilder();
-            text.append(String.format("%s-10 %s\n", "naam", "score"));
+            text.append(String.format("%-10s %s\n", "naam", "score"));
             for (String[] spelerScore : scores) {
                 text.append(String.format("%-10s %s\n", spelerScore[0], spelerScore[1]));
             }
             this.scoreScherm.textlabel.setText(text.toString());
         } else {
             ArrayList<String[]> scores = this.game.getTotalScore();
-            this.scoreScherm.mainLabel.setText(String.format("Scores %s:", scores.get(0)[0]));
+            this.scoreScherm.mainLabel.setText(String.format("Scores %s:\n", scores.get(0)[0]));
             ArrayList<String[]> wScores = this.game.getBesteWoorden(this.game.getSpelers()[0]);
             StringBuilder text = new StringBuilder();
-            text.append(String.format("%s-26 %s\n", "woord", "punten"));
+            text.append(String.format("%-25s %s\n", "woord", "punten"));
             for (String[] woordScore : wScores) {
-                text.append(String.format("%-26s %s\n", woordScore[0], woordScore[1]));
+                text.append(String.format("%-25s %s\n", woordScore[0], woordScore[1]));
             }
             this.scoreScherm.textlabel.setText(text.toString());
         }

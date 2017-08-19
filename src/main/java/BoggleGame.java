@@ -34,6 +34,12 @@ public class BoggleGame {
         return playerIds;
     }
 
+    public void reset(){
+        this.players = null;
+        this.currentPlayer = 0;
+        this.uniekeWoorden = false;
+    }
+
     public void setUniekeWoorden(boolean isUniek){
         this.uniekeWoorden = isUniek;
     }
@@ -153,7 +159,7 @@ public class BoggleGame {
         String query = String.format(
                 "SELECT sp.naam, sc.score FROM (SELECT t.Speler_Id, SUM(t.score) AS score FROM (SELECT sw.Speler_Id, " +
                         "w.score FROM spelerwoord sw INNER JOIN woord w ON w.woord = sw.woord %s) t GROUP BY " +
-                        "t.Speler_Id ORDER BY score DESC) sc INNER JOIN speler sp ON sp.Id = sc.Speler_Id;",
+                        "t.Speler_Id) sc INNER JOIN speler sp ON sp.Id = sc.Speler_Id ORDER BY sc.score DESC;",
                 string.toString());
         Sql sql = new Sql(this.connecetion.getConnection());
         sql.select(query);
