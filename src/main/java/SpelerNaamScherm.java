@@ -2,10 +2,12 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -23,6 +25,8 @@ public class SpelerNaamScherm extends Application {
     Button startButton = new Button("start");
     Button terugButton = new Button("terug");
     Button afsluitButton = new Button("afsluiten");
+    CheckBox uniekCheck = new CheckBox("Alleen unkieke woorden");
+    VBox uniekBox = new VBox();
 
     @Override
     public void start(Stage mainStage){
@@ -46,19 +50,23 @@ public class SpelerNaamScherm extends Application {
 
     public void startProcedure(){
         Label uitleg = new Label("Voer de namen in van de spelers:");
+        uniekCheck.setSelected(false);
+        this.uniekBox.setAlignment(Pos.CENTER);
         this.spelerInvoer = new VBox();
         this.spelerInvoer.setSpacing(50);
-        this.window = new VBox(uitleg, this.spelerInvoer, this.makeButtonBox());
-        this.spelerInvoer.setMinHeight(335);
+        this.window = new VBox(uitleg, this.spelerInvoer, this.uniekBox, this.makeButtonBox());
+        this.spelerInvoer.setMinHeight(270);
         this.window.setAlignment(Pos.CENTER);
         this.window.setSpacing(50);
         this.scene = new Scene(this.window, this.width, this.height);
     }
 
     public void vulScherm(int players){
-        System.out.println("yay");
-        System.out.println(players);
+        this.uniekBox.getChildren().clear();
         this.players = players;
+        if (this.players > 1){
+            this.uniekBox.getChildren().add(this.uniekCheck);
+        }
         this.textFields = new TextField[this.players];
         for (int i = 0; i < this.players; i++) {
             Label player = new Label(String.format("Speler %d:", i + 1));

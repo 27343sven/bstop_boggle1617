@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.rmi.CORBA.Util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -36,9 +37,10 @@ public class BoggleScherm extends Application{
     Group lineGroup = new Group();
     Label timer = new Label("UND");
     Button startTimer = new Button("Start");
+    Button opgeefButton = new Button("beëindig beurt");
     Label woordLabel = new Label("");
     ScrollPane geradenWoordenPane = new ScrollPane();
-    HBox timerBox = new HBox(timer, startTimer);
+    HBox timerBox = new HBox(timer, UtilLib.getCentered(new VBox(startTimer, opgeefButton)));
     Label totalScore = new Label("Score: 0");
     Label speler = new Label("Speler: UND");
 

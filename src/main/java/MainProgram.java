@@ -27,6 +27,7 @@ public class MainProgram extends Application {
     private OptieScherm optieScherm = new OptieScherm();
     private SpelerNaamScherm spelerNaamScherm = new SpelerNaamScherm();
     private WoordenToevoegScherm woordenToevoegScherm = new WoordenToevoegScherm();
+    private ScoreScherm scoreScherm = new ScoreScherm();
     private int boardSize = 5;
     private int buttonSize = 50;
     private int buttonSpacing = 30;
@@ -46,9 +47,15 @@ public class MainProgram extends Application {
         this.bindOptieScherm();
         this.bindSpelerNaamScherm();
         this.bindWoordenToevoegScherm();
+        this.bindScoreScherm();
         this.game.connectDB("boggleopdracht", "bstop", "opdracht");
         this.game.removePlayer(3);
         PrimaryStage.show();
+    }
+
+    private void bindScoreScherm(){
+        this.scoreScherm.afsluitButton.setOnAction(e -> Platform.exit());
+        this.scoreScherm.menuButton.setOnAction(e -> this.beginScherm.start(this.PrimaryStage));
     }
 
     private void bindBeginScherm(){
@@ -73,6 +80,8 @@ public class MainProgram extends Application {
         }
         this.boggleScherm.scene.setOnMouseDragReleased(e -> this.onRelease());
         this.boggleScherm.startTimer.setOnAction(e -> this.doTime());
+        this.boggleScherm.opgeefButton.setOnAction(e -> this.resetGameBoard());
+        this.boggleScherm.opgeefButton.setDisable(true);
         this.setTimerLabel();
         this.updateSpeler();
     }
@@ -100,11 +109,13 @@ public class MainProgram extends Application {
             names[i] = this.spelerNaamScherm.textFields[i].getText();
         }
         this.game.addNewPlayers(names);
+        this.game.getTotalScore();
         this.boardSize = this.optieScherm.boardSize;
         this.totalSeconds = this.optieScherm.seconds;
         this.seconds = this.optieScherm.seconds;
         boggleScherm.start(this.PrimaryStage, this.boardSize, this.buttonSize, this.buttonSpacing, 900, 600);
         this.bindBoggleScherm();
+        this.game.setUniekeWoorden(this.spelerNaamScherm.uniekCheck.isSelected());
         boggleScherm.setLettersHidden(true);
     }
 
@@ -141,20 +152,48 @@ public class MainProgram extends Application {
         this.play = true;
         this.boggleScherm.setLettersHidden(false);
         this.boggleScherm.startTimer.setDisable(true);
+        this.boggleScherm.opgeefButton.setDisable(false);
     }
 
     private void resetGameBoard(){
         play = false;
         boggleScherm.startTimer.setDisable(false);
+        boggleScherm.opgeefButton.setDisable(true);
         lines.clear();
         boggleScherm.setLettersHidden(true);
         boggleScherm.lineGroup.getChildren().clear();
         resetWoordLabel();
         seconds = totalSeconds;
         setTimerLabel();
-        this.game.nextPlayer();
+        if (!this.game.nextPlayer()){
+            this.endGame();
+        }
         this.updateGeradenWoorden();
         this.updateSpeler();
+    }
+
+    private void endGame(){
+        this.scoreScherm.start(this.PrimaryStage);
+        if (this.game.getSpelers().length > 1) {
+            ArrayList<String[]> scores = this.game.getTotalScore();
+            this.scoreScherm.mainLabel.setText(String.format("Winnaar: %s", scores.get(0)[0]));
+            StringBuilder text = new StringBuilder();
+            text.append(String.format("%s-10 %s\n", "naam", "score"));
+            for (String[] spelerScore : scores) {
+                text.append(String.format("%-10s %s\n", spelerScore[0], spelerScore[1]));
+            }
+            this.scoreScherm.textlabel.setText(text.toString());
+        } else {
+            ArrayList<String[]> scores = this.game.getTotalScore();
+            this.scoreScherm.mainLabel.setText(String.format("Scores %s:", scores.get(0)[0]));
+            ArrayList<String[]> wScores = this.game.getBesteWoorden(this.game.getSpelers()[0]);
+            StringBuilder text = new StringBuilder();
+            text.append(String.format("%s-26 %s\n", "woord", "punten"));
+            for (String[] woordScore : wScores) {
+                text.append(String.format("%-26s %s\n", woordScore[0], woordScore[1]));
+            }
+            this.scoreScherm.textlabel.setText(text.toString());
+        }
     }
 
     private void setTimerLabel(){
