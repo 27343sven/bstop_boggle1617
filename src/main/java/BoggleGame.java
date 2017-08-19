@@ -52,12 +52,14 @@ public class BoggleGame {
         return sql.getResults();
     }
 
-    public void play(){
-        this.currentPlayer = 0;
-    }
-
     public int[] getSpelers(){
         return this.players;
+    }
+
+    public boolean playerScoreExists(int playerId){
+        Sql sql = new Sql(this.connecetion.getConnection());
+        sql.select(String.format("SELECT 'gevonden!' FROM spelerwoord WHERE Speler_Id = %d LIMIT 1;", playerId));
+        return (sql.getRowCount() > 0);
     }
 
     public ArrayList<String[]> getBesteWoorden(int playerId){
@@ -147,7 +149,7 @@ public class BoggleGame {
         }
     }
 
-    public ArrayList<String[]> getTotalScore(){
+    public ArrayList<String[]> getTotalScore(boolean byId){
         StringBuilder string = new StringBuilder();
         for (int i = 0; i < this.players.length; i++) {
             if (i == 0){
@@ -156,15 +158,30 @@ public class BoggleGame {
                 string.append(String.format(" OR Speler_Id = %d ", this.players[i]));
             }
         }
-        String query = String.format(
-                "SELECT sp.naam, sc.score FROM (SELECT t.Speler_Id, SUM(t.score) AS score FROM (SELECT sw.Speler_Id, " +
-                        "w.score FROM spelerwoord sw INNER JOIN woord w ON w.woord = sw.woord %s) t GROUP BY " +
-                        "t.Speler_Id) sc INNER JOIN speler sp ON sp.Id = sc.Speler_Id ORDER BY sc.score DESC;",
-                string.toString());
         Sql sql = new Sql(this.connecetion.getConnection());
-        sql.select(query);
+        sql.select(this.getQuery(byId, string.toString()));
         return sql.getResults();
     }
+
+    public String getQuery(boolean byId, String playerSql){
+        if (byId){
+            return String.format(
+                    "SELECT t.Speler_Id, SUM(t.score) AS score FROM (SELECT sw.Speler_Id, w.score FROM spelerwoord " +
+                            "sw INNER JOIN woord w on w.woord = sw.woord %s) t GROUP BY t.Speler_Id " +
+                            "ORDER BY score DESC;",
+                    playerSql);
+
+        } else {
+            return String.format(
+                    "SELECT sp.naam, sc.score FROM (SELECT t.Speler_Id, SUM(t.score) AS score FROM (SELECT " +
+                            "sw.Speler_Id, w.score FROM spelerwoord sw INNER JOIN woord w ON w.woord = sw.woord %s) " +
+                            "t GROUP BY t.Speler_Id) sc INNER JOIN speler sp ON sp.Id = sc.Speler_Id "+
+                            "ORDER BY sc.score DESC;",
+                    playerSql);
+        }
+    }
+
+
 
     public boolean guessWoord(String woord){
         boolean isWoord = this.checkWoord(woord);

@@ -13,6 +13,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -114,7 +118,6 @@ public class MainProgram extends Application {
             names[i] = this.spelerNaamScherm.textFields[i].getText();
         }
         this.game.addNewPlayers(names);
-        this.game.getTotalScore();
         this.boardSize = this.optieScherm.boardSize;
         this.totalSeconds = this.optieScherm.seconds;
         this.seconds = this.optieScherm.seconds;
@@ -182,25 +185,45 @@ public class MainProgram extends Application {
     private void endGame(){
         this.scoreScherm.start(this.PrimaryStage);
         if (this.game.getSpelers().length > 1) {
-            ArrayList<String[]> scores = this.game.getTotalScore();
-            this.scoreScherm.mainLabel.setText(String.format("Winnaar: %s\n", scores.get(0)[0]));
-            StringBuilder text = new StringBuilder();
-            text.append(String.format("%-10s %s\n", "naam", "score"));
-            for (String[] spelerScore : scores) {
-                text.append(String.format("%-10s %s\n", spelerScore[0], spelerScore[1]));
-            }
-            this.scoreScherm.textlabel.setText(text.toString());
+            this.endMultiPlayer();
         } else {
-            ArrayList<String[]> scores = this.game.getTotalScore();
-            this.scoreScherm.mainLabel.setText(String.format("Scores %s:\n", scores.get(0)[0]));
-            ArrayList<String[]> wScores = this.game.getBesteWoorden(this.game.getSpelers()[0]);
+            this.endSinglePlayer();
+        }
+    }
+
+    private void endMultiPlayer(){
+        ArrayList<String[]> scores = this.game.getTotalScore(true);
+        List<Integer> idQueue = IntStream.of(this.game.getSpelers()).boxed().collect(Collectors.toList());
+        StringBuilder text = new StringBuilder();
+        text.append(String.format("%-10s %s\n", "naam", "score"));
+        for (String[] spelerScore : scores) {
+            text.append(String.format("%-10s %s\n", this.game.getPlayerName(
+                    Integer.parseInt(spelerScore[0])),
+                    spelerScore[1]));
+            idQueue.remove(new Integer(Integer.parseInt(spelerScore[0])));
+        }
+        for (Integer id : idQueue) {
+            text.append(String.format("%-10s 0\n", this.game.getPlayerName(id)));
+        }
+        this.scoreScherm.textlabel.setText(text.toString());
+    }
+
+    private void endSinglePlayer(){
+        String player = this.game.getPlayerName(this.game.getSpelers()[0]);
+        int score = 0;
+        if (this.game.playerScoreExists(this.game.getSpelers()[0])){
+            ArrayList<String[]> besteWoorden = this.game.getBesteWoorden(this.game.getSpelers()[0]);
             StringBuilder text = new StringBuilder();
             text.append(String.format("%-25s %s\n", "woord", "punten"));
-            for (String[] woordScore : wScores) {
+            for (String[] woordScore : besteWoorden) {
                 text.append(String.format("%-25s %s\n", woordScore[0], woordScore[1]));
             }
             this.scoreScherm.textlabel.setText(text.toString());
+            score = Integer.parseInt(this.game.getTotalScore(true).get(0)[1]);
+        } else {
+            this.scoreScherm.textlabel.setText("<geen woorden>");
         }
+        this.scoreScherm.mainLabel.setText(String.format("Score %s: %d\n",player, score));
     }
 
     private void setTimerLabel(){
