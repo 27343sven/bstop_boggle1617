@@ -71,14 +71,18 @@ public class BoggleScherm extends Application{
         Pane boggleScherm = new Pane(boggleButtons, lineGroup);
         this.gameBox = new VBox(this.timerBox, this.woordLabel, boggleScherm);
         this.window = new HBox(gameBox, new VBox(geradenWoordenPane, this.totalScore, this.speler));
+        this.alignBoxes();
+        this.geradenWoordenPane.setMinWidth(this.geradenWoordenWidth);
+        this.geradenWoordenPane.setMinHeight(this.height - 50);
+        this.scene = new Scene(UtilLib.getCentered(window), this.width, this.height);
+    }
+
+    private void alignBoxes(){
         this.timerBox.setSpacing((this.boardSize - 2) * this.buttonSpacing + (this.boardSize - 2) * this.buttonSize);
         this.timerBox.setAlignment(Pos.CENTER);
         this.gameBox.setAlignment(Pos.CENTER);
         this.gameBox.setSpacing(this.buttonSpacing);
         this.window.setSpacing(this.width * 0.20);
-        this.geradenWoordenPane.setMinWidth(this.geradenWoordenWidth);
-        this.geradenWoordenPane.setMinHeight(this.height - 50);
-        this.scene = new Scene(UtilLib.getCentered(window), this.width, this.height);
     }
 
     private HBox makeBoggleScherm(){

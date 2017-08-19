@@ -35,16 +35,20 @@ public class ScoreScherm extends Application {
         buttonBox.setMaxHeight(50);
         VBox labelBox = new VBox(this.mainLabel, this.textlabel);
         labelBox.setAlignment(Pos.CENTER);
+        setBoxStyle();
+        textlabel.setStyle("-fx-font-family: monospace");
+        this.window = new VBox(labelBox, buttonBox);
+        this.window.setAlignment(Pos.CENTER);
+        this.scene = new Scene(this.window, this.width, this.height);
+    }
+
+    private void setBoxStyle(){
         this.mainLabel.setMaxHeight(50);
         this.mainLabel.setFont(new Font(23));
         this.mainLabel.setMinHeight(50);
         this.textlabel.setMaxHeight(300);
         this.textlabel.setMinHeight(300);
         this.textlabel.setFont(new Font(18));
-        textlabel.setStyle("-fx-font-family: monospace");
-        this.window = new VBox(labelBox, buttonBox);
-        this.window.setAlignment(Pos.CENTER);
-        this.scene = new Scene(this.window, this.width, this.height);
     }
 
     public static void main(String[] args) {

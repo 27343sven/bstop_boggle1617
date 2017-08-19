@@ -1,3 +1,4 @@
+import com.sun.xml.internal.bind.v2.TODO;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -139,11 +140,9 @@ public class MainProgram extends Application {
         this.time = new Timeline();
         this.seconds = this.totalSeconds;
         this.time.setCycleCount(this.seconds + 1);
-
         if (this.time == null){
             this.time.stop();
         }
-
         this.seconds = this.totalSeconds;
         KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             @Override
@@ -156,7 +155,6 @@ public class MainProgram extends Application {
                 }
             }
         });
-
         this.time.getKeyFrames().add(frame);
         this.time.playFromStart();
         this.play = true;

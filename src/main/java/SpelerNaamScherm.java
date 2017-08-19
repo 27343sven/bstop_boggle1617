@@ -70,7 +70,7 @@ public class SpelerNaamScherm extends Application {
         this.textFields = new TextField[this.players];
         for (int i = 0; i < this.players; i++) {
             Label player = new Label(String.format("Speler %d:", i + 1));
-            TextField text = new TextField();
+            TextField text = new TextField(){ @Override public void paste() { }};
             text.addEventFilter(KeyEvent.KEY_TYPED, UtilLib.lowercaseValidation(10));
             HBox temp = new HBox(player, text);
             textFields[i] = text;

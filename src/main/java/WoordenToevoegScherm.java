@@ -17,7 +17,7 @@ public class WoordenToevoegScherm extends Application {
     Button terugButton = new Button("terug");
     Button afsluitButton = new Button("afsluiten");
     Label statusLabel = new Label();
-    TextField text = new TextField();
+    TextField text = new TextField(){@Override public void paste() { }};
     double height = 300;
     double width = 300;
     VBox window;
