@@ -149,7 +149,6 @@ public class MainProgram extends Application {
         dialog.initOwner(this.PrimaryStage);
         Scene dialogScene = new Scene(window, width, height);
         dialog.setScene(dialogScene);
-        this.dialog = dialog;
         dialog.showAndWait();
     }
 
