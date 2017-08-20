@@ -20,6 +20,9 @@ import java.util.Random;
 
 /**
  * Created by sven on 15-May-17.
+ *
+ * applicatie voor het speelveld
+ *
  */
 public class BoggleScherm extends Application{
     private int boardSize = 5;
@@ -44,6 +47,11 @@ public class BoggleScherm extends Application{
     Label totalScore = new Label("Score: 0");
     Label speler = new Label("Speler: UND");
 
+    /**
+     * init voor het BoggleScherm
+     *
+     * @param PrimaryStage Stage hoffdStage
+     */
     @Override
     public void start(Stage PrimaryStage){
         this.startProcedure();
@@ -51,6 +59,18 @@ public class BoggleScherm extends Application{
         PrimaryStage.show();
     }
 
+    /**
+     * methode die wordt aangeroepen als dit scherm wordt geïnitieerd
+     *
+     * het slaat de bord grote, knop grote, ruimte tussen de knoppen, breedte en lengte op en maakt de scene zichtbaar
+     *
+     * @param PrimaryStage Stage
+     * @param boardSize int grote van het bord (4 of 5)
+     * @param buttonSize int grote van de knoppen
+     * @param buttonSpacing int ruimte tussen de knoppen
+     * @param width = int breedte van het scherm
+     * @param height = int lengte van het scherm
+     */
     public void start(Stage PrimaryStage, int boardSize, int buttonSize, int buttonSpacing, int width, int height){
         this.boardSize = boardSize;
         this.buttonSize = buttonSize;
@@ -62,6 +82,12 @@ public class BoggleScherm extends Application{
         PrimaryStage.show();
     }
 
+    /**
+     * maakt het scherm
+     *
+     * er wordt een speelbord gemaakt met de grote die is aangegeven, ook worden er character gegenereerd voor deze
+     * buttons. Ook worden er labels toegevoegd voor tijd, score, de speler en geraden woorden
+     */
     private void startProcedure(){
         this.woordLabel.setFont(new Font(25));
         this.BoggleArray = new BoggleButton[boardSize][boardSize];
@@ -77,6 +103,11 @@ public class BoggleScherm extends Application{
         this.scene = new Scene(UtilLib.getCentered(window), this.width, this.height);
     }
 
+    /**
+     * alignt de boxen
+     *
+     * aligned alle boxen en zet er de goede spacing bij
+     */
     private void alignBoxes(){
         this.timerBox.setSpacing((this.boardSize - 2) * this.buttonSpacing + (this.boardSize - 2) * this.buttonSize);
         this.timerBox.setAlignment(Pos.CENTER);
@@ -85,10 +116,19 @@ public class BoggleScherm extends Application{
         this.window.setSpacing(this.width * 0.20);
     }
 
+    /**
+     * maakt de buttons en zet de juiste character erbij
+     *
+     * loopt door alle rijen heen en maakt een VBox voor elke rij, deze VBox krijgt de juiste alignment en spacing mee.
+     * voor elk van deze rijen maakt het ook een rij (HBox) aan, in deze Hbox worden Boggle buttons gezet met de
+     * voorgegenereerde characters, de HBox en worden in de VBoxen gezet en deze VBoxen worden weer in een HBox gezet
+     * en deze wordt uiteindelijk gereturned
+     *
+     * @return HBox box met alle buttons erin
+     */
     private HBox makeBoggleScherm(){
         HBox boggleButtons = new HBox();
         boggleButtons.setSpacing(this.buttonSpacing);
-        BoggleButton[][] BoggleArray = new BoggleButton[boardSize][boardSize];
         for (int i = 0; i < boardSize; i++){
             VBox temp = new VBox();
             temp.setSpacing(this.buttonSpacing);
@@ -105,6 +145,13 @@ public class BoggleScherm extends Application{
         return(boggleButtons);
     }
 
+    /**
+     * verbergt of laat de buttons zien
+     *
+     * loopt door alle buttons en laat ze zien of verbergd ze
+     *
+     * @param isHidden boolean true = zet de buttons hidden, false = show de buttons
+     */
     public void setLettersHidden(boolean isHidden){
         for (int i = 0; i < this.BoggleArray.length; i++) {
             for (int j = 0; j < this.BoggleArray[i].length; j++) {
@@ -117,6 +164,12 @@ public class BoggleScherm extends Application{
         }
     }
 
+    /**
+     * maakt characters voor het scherm
+     *
+     * als eerst selecteert het 5 random klinkers en dez deze in een arraylist, hierna worden er random letters
+     * toegevoegd totdat het er genoeg heeft, dan wordt de arraylist geshufled
+     */
     private void generateCharacters(){
         ArrayList<Character> tempCharacters = new ArrayList<Character>();
         char[] vowel = { 'a', 'e', 'i', 'o', 'u' };
@@ -138,6 +191,13 @@ public class BoggleScherm extends Application{
         }
     }
 
+    /**
+     *start het programma
+     *
+     * wordt allen gebruikt om te testens
+     *
+     * @param args String array met systeem argumenten
+     */
     public static void main(String[] args) {
         launch();
     }

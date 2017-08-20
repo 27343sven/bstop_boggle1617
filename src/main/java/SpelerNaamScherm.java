@@ -13,6 +13,9 @@ import javafx.stage.Stage;
 
 /**
  * Created by sven on 18-Aug-17.
+ *
+ * scherm waar de gebruiker de namen van de spelers kan invoeren
+ *
  */
 public class SpelerNaamScherm extends Application {
     VBox window;
@@ -28,6 +31,11 @@ public class SpelerNaamScherm extends Application {
     CheckBox uniekCheck = new CheckBox("Alleen unkieke woorden");
     VBox uniekBox = new VBox();
 
+    /**
+     * maakt het scherm
+     *
+     * @param mainStage Stage die standaard wordt meegegeven
+     */
     @Override
     public void start(Stage mainStage){
         this.startProcedure();
@@ -35,6 +43,12 @@ public class SpelerNaamScherm extends Application {
         mainStage.show();
     }
 
+    /**
+     * overload van de start functie hierbij wordt het aantal spelers opgeslagen
+     *
+     * @param mainStage Stage die standaard wordt meegegeven
+     * @param players int het aantal spelers
+     */
     public void start(Stage mainStage, int players){
         this.players = players;
         this.startProcedure();
@@ -42,12 +56,20 @@ public class SpelerNaamScherm extends Application {
         mainStage.show();
     }
 
+    /**
+     * maakt heen HBox met de voorgedefineerde buttons met de juiste spacing en alignment
+     *
+     * @return HBox met alle buttons erin
+     */
     private HBox makeButtonBox(){
         HBox buttonBox = UtilLib.makeHBox(Pos.CENTER, 50);
         buttonBox.getChildren().addAll(terugButton, afsluitButton, startButton);
         return buttonBox;
     }
 
+    /**
+     * maakt alle boxen en zet ze in de juiste volgorde met de juiste spacing en alignment
+     */
     public void startProcedure(){
         Label uitleg = new Label("Voer de namen in van de spelers:");
         uniekCheck.setSelected(false);
@@ -61,6 +83,17 @@ public class SpelerNaamScherm extends Application {
         this.scene = new Scene(this.window, this.width, this.height);
     }
 
+    /**
+     * vult het scherm op bisis van een aantal spelers
+     *
+     * dez funcite wordt pas later in het programma aangeroepen omdat het aantal spelers nog niet van tevoren is te
+     * bepalen, het kijkt eerst of er meer dan een speler is, als dit het geval is dan wordt er een checkbox
+     * toegevoegd die ervoor zorgt dat een woord maar door een speler kan worden geraden, hierna loopt het door het
+     * aantal spelers heen en maakt voor elke speler een textbox waar een naam kan worden ingevoerd, deze textbox krijgt
+     * een event mee waardoor het alleen de letters a-z accepteerd en er maar 10 characters kan worden ingevoerd
+     *
+     * @param players int aantal spelers
+     */
     public void vulScherm(int players){
         this.uniekBox.getChildren().clear();
         this.players = players;
@@ -80,9 +113,11 @@ public class SpelerNaamScherm extends Application {
         }
     }
 
-
-
-
+    /**
+     * start de applicatie
+     *
+     * @param args String array met systeem argumenten
+     */
     public static void main(String[] args) {
         launch(args);
     }

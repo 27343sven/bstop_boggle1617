@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 
 /**
  * Created by sven on 16-Aug-17.
+ *
+ * in dit scherm kan er een nieuw wordt worden toegevoegd
  */
 public class WoordenToevoegScherm extends Application {
     Button toevoegButton = new Button("Toevoegen");
@@ -23,6 +25,11 @@ public class WoordenToevoegScherm extends Application {
     VBox window;
     Scene scene;
 
+    /**
+     * maakt het scherm en sized deze naar een bepaalde lengte en breedte
+     *
+     * @param mainStage Stage die standaard wordt meegegeven
+     */
     @Override
     public void start(Stage mainStage){
         this.window = new VBox();
@@ -32,6 +39,13 @@ public class WoordenToevoegScherm extends Application {
         mainStage.show();
     }
 
+    /**
+     * vult het scherm
+     *
+     * deze methode vult daadwerkelijk het scherm, in het scherm zit een status label, een textfield waar een woord
+     * kan worden meegegeven van maximaal 25 characters en een knop om het woord op te slaan, deze worden in boxen
+     * gestopt met de juiste alignment en spacing.
+     */
     public void fillWindow(){
         this.window.setSpacing(20);
         this.window.setAlignment(Pos.CENTER);
@@ -48,6 +62,11 @@ public class WoordenToevoegScherm extends Application {
         this.window.getChildren().addAll(screen, buttonBox);
     }
 
+    /**
+     * start de applicatie
+     *
+     * @param args String array met systeem argumenten
+     */
     public static void main(String[] args) {
         launch(args);
     }

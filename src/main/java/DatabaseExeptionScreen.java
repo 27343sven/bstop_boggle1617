@@ -20,13 +20,29 @@ public class DatabaseExeptionScreen extends Application{
     String DBPass;
     TextField[] databaseData = new TextField[3];
 
-
-
+    /**
+     * maakt het scherm
+     *
+     * wordt automatisch aangeroepen als de applicaite wordt gestart, maakt het scherm
+     *
+     * @param primaryStage Stage die alles toont
+     */
     @Override
     public void start(Stage primaryStage){
         this.startProcedure(primaryStage);
     }
 
+    /**
+     * maakt het scherm en slaat database gegevens op
+     *
+     * overload van de andere startfunctie, hierbij wordt de naam van de database en de user met zijn wachtwoord
+     * meegegeven en opgeslagen
+     *
+     * @param primaryStage Stage primaryStage
+     * @param DBName String naam van de database
+     * @param DBUser String username op de database
+     * @param DBPass String wachtwoord van de user
+     */
     public void start(Stage primaryStage, String DBName, String DBUser, String DBPass){
         this.DBName = DBName;
         this.DBPass = DBPass;
@@ -34,6 +50,14 @@ public class DatabaseExeptionScreen extends Application{
         this.startProcedure(primaryStage);
     }
 
+    /**
+     * maakt het scherm
+     *
+     * maakt het scherm dat wordt getoond als er geen connectie kan worden gemaakt met de database, dit scherm heeft
+     * een veld voor de naam van de database een user en het wachtwoord van de user.
+     *
+     * @param primaryStage Stage die wordt getoond
+     */
     private void startProcedure(Stage primaryStage){
         Text warning = new Text(
                 "er kon geen connectie worden gemaakt met de database\nvoer de correcte gegevens hier in:"
@@ -46,6 +70,13 @@ public class DatabaseExeptionScreen extends Application{
         primaryStage.show();
     }
 
+    /**
+     * maakt een HBox met alle buttons erin
+     *
+     * neemt de voorgedeclareerde buttons en zet ze in een Box met de juiste alignment en spacing
+     *
+     * @return HBox met alle buttons
+     */
     private HBox databaseExeptionButtonBox(){
         HBox buttonBox = new HBox(this.connectButton, this.afsluitButton);
         buttonBox.setAlignment(Pos.CENTER);
@@ -53,6 +84,15 @@ public class DatabaseExeptionScreen extends Application{
         return buttonBox;
     }
 
+    /**
+     * maakt de textinvoer voor de database gegevens
+     *
+     * loopt door alle database gegevens heen en maakt een textvak vool elk van deze, voor het wachtwoord wordt er een
+     * speciaal wachtwoordtextvak aangemaakt, in deze textvakken worden de oude waarden ingevuld. deze worden in een
+     * Box gestop met de juise alignment en spacing en gereturned
+     *
+     * @return VBox met alle textvelden en label vooer het invoeren van de database gegevens
+     */
     private VBox databaseExeptionTextfields(){
         VBox texts = UtilLib.makeVBox(Pos.CENTER, 30);
         String[] fields = new String[]{"Database", "User       ", "Password"};
@@ -73,6 +113,11 @@ public class DatabaseExeptionScreen extends Application{
         return texts;
     }
 
+    /**
+     * start de applicatie
+     *
+     * @param args String Array systeem argumenten
+     */
     public static void main(String[] args) {
         launch(args);
     }

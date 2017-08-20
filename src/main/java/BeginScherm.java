@@ -8,6 +8,9 @@ import javafx.stage.Stage;
 
 /**
  * Created by sven on 16-Aug-17.
+ *
+ * beginscherm van het spel
+ *
  */
 public class BeginScherm extends Application{
 
@@ -19,6 +22,13 @@ public class BeginScherm extends Application{
     int width = 300;
     int height = 300;
 
+    /**
+     * standaard functie die wordt aangeroepen als het scherm moet worden getoond
+     *
+     * roept de startprocedure aan en laat de mainStage zien
+     *
+     * @param mainStage Stage die wordt meegegeven
+     */
     @Override
     public void start(Stage mainStage){
         this.startProcedure();
@@ -26,6 +36,11 @@ public class BeginScherm extends Application{
         mainStage.show();
     }
 
+    /**
+     * voegt alle nodes toe aan het beginscherm
+     *
+     * zet alle buttons in een Vertical box en zet deze in de scene met de correcte alignment en spacing
+     */
     public void startProcedure(){
         this.window = new VBox();
         this.window.setAlignment(Pos.CENTER);
@@ -35,6 +50,13 @@ public class BeginScherm extends Application{
         this.window.getChildren().addAll(welkomBericht, this.spelenButton, this.woordToevoegButton, this.afsluitButton);
     }
 
+    /**
+     * start de Applicatie(om dit scherm te testen)
+     *
+     * deze dient alleen voor het testen
+     *
+     * @param args String Array met de systeem argumenten
+     */
     public static void main(String[] args) {
         launch(args);
     }

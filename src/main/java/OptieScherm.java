@@ -28,6 +28,11 @@ public class OptieScherm extends Application{
     Button afsluitButton = new Button("afsluiten");
     Button helpButton = new Button("?");
 
+    /**
+     * start functie die wordt aangeroepen op het scherm te starten, maakt het scherm
+     *
+     * @param mainStage Stage die standaard wordt meegegeven
+     */
     @Override
     public void start(Stage mainStage) {
         VBox window = this.setToggleBoxes();
@@ -39,6 +44,16 @@ public class OptieScherm extends Application{
         mainStage.show();
     }
 
+    /**
+     * maakt toggleboxen voor alle opties
+     *
+     * er wordt een togglebox aangemaakt voor de volgende opties (aantal spelers, bordgrote, tijd) voor elk van deze
+     * boxen wordt er een standaard waarde megegeven en er wordt oook metadata meegegeven met de getallen die het
+     * programma gebruikt (bijv. voor bord grote 4x4 wordt er aan het programma 4 meegegeven). ook wordt er een hulp
+     * knop aangemaakt die later uitleg gaat geven over de opties in het programma
+     *
+     * @return VBox met alle toggleboxen
+     */
     public VBox setToggleBoxes(){
         this.helpButton.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-style: dotted");
         VBox playerBox = this.makeToggleGroup(
@@ -53,7 +68,14 @@ public class OptieScherm extends Application{
         return new VBox(playerBox, boardBox, timeBox,  this.helpButton, makeButtonBox());
     }
 
-
+    /**
+     * maakt een box met alle buttons
+     *
+     * maakt een HBox met de juiste spacing en alignment en zet hier alle voorafgedefineerde buttons in, ook weizigt het
+     * de stijl van de hulpbutton
+     *
+     * @return HBox met alle buttons
+     */
     private HBox makeButtonBox(){
         HBox buttonBox = UtilLib.makeHBox(Pos.CENTER, 50);
         this.helpButton.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-style: dotted");
@@ -63,6 +85,16 @@ public class OptieScherm extends Application{
         return buttonBox;
     }
 
+    /**
+     *
+     * @param names String array namen voor in de togglegroep (deze worden aan de user getoond)
+     * @param group Togglegroep waar de togglebuttons bij horen
+     * @param toggleArray array van radio buttons voor latere referentie
+     * @param selectionIndex index van de default waarde
+     * @param title String titel van de radioboxen
+     * @param userData = String array met de waarden die het programma ontvangt als het de data opvraagt
+     * @return
+     */
     private VBox makeToggleGroup(String[] names, ToggleGroup group, RadioButton[] toggleArray, int selectionIndex,
     String title, String[] userData){
         toggleArray = new RadioButton[names.length];
@@ -81,13 +113,11 @@ public class OptieScherm extends Application{
         return mainBox;
     }
 
-    private VBox makeVBox(Pos alignment, int spacing){
-        VBox box = new VBox();
-        box.setSpacing(spacing);
-        box.setAlignment(alignment);
-        return box;
-    }
-
+    /**
+     * bind alle toggle groeps aan een methode
+     *
+     * maakt een event aan voor alle togglegroeps dat als de toggle verandert het de informatie gelijk opslaat
+     */
     private void bindToggleGroups(){
         this.playerSelection.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
@@ -115,12 +145,20 @@ public class OptieScherm extends Application{
         });
     }
 
+    /**
+     * slaat alle togglegroep data op in de klasse attributen
+     */
     private void setSelectionVariables(){
         this.players = Integer.parseInt(this.playerSelection.getSelectedToggle().getUserData().toString());
         this.boardSize = Integer.parseInt(this.boardSelection.getSelectedToggle().getUserData().toString());
         this.seconds = Integer.parseInt(this.timeSelection.getSelectedToggle().getUserData().toString());
     }
 
+    /**
+     * start de applicatie
+     *
+     * @param args string array systeem argumenten
+     */
     public static void main(String[] args) {
         launch(args);
     }

@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 
 /**
  * Created by sven on 19-Aug-17.
+ *
+ * scherm die de resultaten van het spel laat zien
  */
 public class ScoreScherm extends Application {
 
@@ -21,6 +23,11 @@ public class ScoreScherm extends Application {
     int width = 400;
     int height = 500;
 
+    /**
+     * maakt het scherm
+     *
+     * @param primaryStage Stage die standaard wordt meegegeven
+     */
     @Override
     public void start(Stage primaryStage){
         this.startProcedure();
@@ -28,6 +35,12 @@ public class ScoreScherm extends Application {
         primaryStage.show();
     }
 
+    /**
+     * maakt het scherm
+     *
+     * er wordt een label gamaakt on de uiteindelijke winnaar te laten, en nog een label om de scores te laten zien
+     * van dit label wordt de style op monospaced gezet zodat alles mooi aligned en het overzichtelijk is.
+     */
     public void startProcedure(){
         HBox buttonBox = new HBox(this.menuButton, this.afsluitButton);
         buttonBox.setAlignment(Pos.BOTTOM_CENTER);
@@ -42,6 +55,11 @@ public class ScoreScherm extends Application {
         this.scene = new Scene(this.window, this.width, this.height);
     }
 
+    /**
+     * maakt alle boxen netjes
+     *
+     * ze de aignement en spacing van alle boxen
+     */
     private void setBoxStyle(){
         this.mainLabel.setMaxHeight(50);
         this.mainLabel.setFont(new Font(23));
@@ -51,6 +69,11 @@ public class ScoreScherm extends Application {
         this.textlabel.setFont(new Font(18));
     }
 
+    /**
+     * start de applicatie
+     *
+     * @param args String array met systeem argumenten
+     */
     public static void main(String[] args) {
         launch(args);
     }
