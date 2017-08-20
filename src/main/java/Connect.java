@@ -10,17 +10,14 @@ public class Connect {
     public Connect(){
     }
 
-    public void setConnection(String database, String user, String password){
+    public void setConnection(String database, String user, String password) throws SQLException{
         String format = String.format("jdbc:postgresql://localhost/%s", database);
         Properties props = new Properties();
         props.put("user", user);
         props.put("password", password);
-        try {
-            this.conn = DriverManager.getConnection(format, props);
-            this.conn.setAutoCommit(true);
-        } catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
+        this.conn = DriverManager.getConnection(format, props);
+        this.conn.setAutoCommit(true);
+
     }
 
     public Connection getConnection(){

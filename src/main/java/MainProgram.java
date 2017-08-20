@@ -7,9 +7,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -17,6 +24,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.postgresql.util.PSQLException;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +47,7 @@ public class MainProgram extends Application {
     private SpelerNaamScherm spelerNaamScherm = new SpelerNaamScherm();
     private WoordenToevoegScherm woordenToevoegScherm = new WoordenToevoegScherm();
     private ScoreScherm scoreScherm = new ScoreScherm();
+    private DatabaseExeptionScreen databaseExeptionScreen = new DatabaseExeptionScreen();
     private int boardSize = 5;
     private int buttonSize = 50;
     private int buttonSpacing = 30;
@@ -48,6 +59,11 @@ public class MainProgram extends Application {
     private boolean play = false;
     private BoggleGame game = new BoggleGame();
     private Stage PrimaryStage;
+    private String DBName = "boggleopdracht";
+    private String DBUser = "bstop";
+    private String DBPass = "opdrachts";
+    private TextField[] exeptionText = new TextField[3];
+    private Stage dialog;
 
     public void start(Stage PrimaryStage){
         this.PrimaryStage = PrimaryStage;
@@ -57,9 +73,17 @@ public class MainProgram extends Application {
         this.bindSpelerNaamScherm();
         this.bindWoordenToevoegScherm();
         this.bindScoreScherm();
-        this.game.connectDB("boggleopdracht", "bstop", "opdracht");
-        this.game.removePlayer(3);
+        this.bindDatabaseExeptionScreen();
+        this.tryDatabaseConnection();
         PrimaryStage.show();
+    }
+
+    private void tryDatabaseConnection(){
+        try {
+            this.game.connectDB(this.DBName, this.DBUser, this.DBPass);
+        } catch (SQLException e) {
+            this.databaseExeptionScreen.start(this.PrimaryStage, this.DBName, this.DBUser, this.DBPass);
+        }
     }
 
     private void bindScoreScherm(){
@@ -108,6 +132,29 @@ public class MainProgram extends Application {
         this.spelerNaamScherm.terugButton.setOnAction(e -> this.optieScherm.start(this.PrimaryStage));
     }
 
+    private void bindDatabaseExeptionScreen(){
+        this.databaseExeptionScreen.afsluitButton.setOnAction(e -> Platform.exit());
+        this.databaseExeptionScreen.connectButton.setOnAction(e -> this.onConnectAgainButton());
+    }
+
+    private void onConnectAgainButton(){
+        this.DBName = this.databaseExeptionScreen.databaseData[0].getText();
+        this.DBUser = this.databaseExeptionScreen.databaseData[1].getText();
+        this.DBPass = this.databaseExeptionScreen.databaseData[2].getText();
+        this.beginScherm.start(this.PrimaryStage);
+        this.tryDatabaseConnection();
+    }
+
+    private void showDialog(Parent window, double width, double height){
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(this.PrimaryStage);
+        Scene dialogScene = new Scene(window, width, height);
+        dialog.setScene(dialogScene);
+        this.dialog = dialog;
+        dialog.showAndWait();
+    }
+
     private void onToevoegButton(){
         this.woordenToevoegScherm.statusLabel.setText(this.game.addWoord(this.woordenToevoegScherm.text.getText()));
     }
@@ -141,15 +188,10 @@ public class MainProgram extends Application {
     }
 
     private void onHelpButton(){
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(this.PrimaryStage);
         VBox dialogVbox = new VBox(20);
         dialogVbox.setAlignment(Pos.CENTER);
         dialogVbox.getChildren().add(this.optieDialogText());
-        Scene dialogScene = new Scene(dialogVbox, 700, 200);
-        dialog.setScene(dialogScene);
-        dialog.showAndWait();
+        this.showDialog(dialogVbox, 700, 200);
     }
 
     private Text optieDialogText(){

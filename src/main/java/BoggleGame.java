@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -115,7 +116,7 @@ public class BoggleGame {
         }
     }
 
-    public void connectDB(String database, String user, String password){
+    public void connectDB(String database, String user, String password) throws SQLException{
         this.connecetion.setConnection(database, user, password);
     }
 
