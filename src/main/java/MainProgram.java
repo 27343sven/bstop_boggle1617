@@ -62,8 +62,6 @@ public class MainProgram extends Application {
     private String DBName = "boggleopdracht";
     private String DBUser = "bstop";
     private String DBPass = "opdrachts";
-    private TextField[] exeptionText = new TextField[3];
-    private Stage dialog;
 
     public void start(Stage PrimaryStage){
         this.PrimaryStage = PrimaryStage;
