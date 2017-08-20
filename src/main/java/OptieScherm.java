@@ -26,6 +26,7 @@ public class OptieScherm extends Application{
     Button volgendeButton = new Button("volgende");
     Button menuButton = new Button("menu");
     Button afsluitButton = new Button("afsluiten");
+    Button helpButton = new Button("?");
 
     @Override
     public void start(Stage mainStage) {
@@ -39,6 +40,7 @@ public class OptieScherm extends Application{
     }
 
     public VBox setToggleBoxes(){
+        this.helpButton.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-style: dotted");
         VBox playerBox = this.makeToggleGroup(
                 new String[] {"1", "2", "3", "4"}, this.playerSelection,
                 this.playerButtons, 0, "Spelers:", new String[] {"1", "2", "3", "4"});
@@ -48,12 +50,15 @@ public class OptieScherm extends Application{
         VBox timeBox = this.makeToggleGroup(
                 new String[] {"2:00", "2:30", "3:00", "3:30", "4:00"}, this.timeSelection,
                 this.timeButtons, 2, "Tijd:", new String[] {"120", "150", "180", "210", "240"});
-        return new VBox(playerBox, boardBox, timeBox, makeButtonBox());
+        return new VBox(playerBox, boardBox, timeBox,  this.helpButton, makeButtonBox());
     }
 
 
     private HBox makeButtonBox(){
         HBox buttonBox = UtilLib.makeHBox(Pos.CENTER, 50);
+        this.helpButton.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-style: dotted");
+        HBox helpBox = new HBox(this.helpButton);
+        helpBox.setAlignment(Pos.CENTER_LEFT);
         buttonBox.getChildren().addAll(menuButton, afsluitButton, volgendeButton);
         return buttonBox;
     }

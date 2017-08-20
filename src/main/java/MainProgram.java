@@ -6,11 +6,15 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.util.ArrayList;
@@ -95,6 +99,7 @@ public class MainProgram extends Application {
         this.optieScherm.afsluitButton.setOnAction(e -> Platform.exit());
         this.optieScherm.volgendeButton.setOnAction(e -> this.onVolgendeButton());
         this.optieScherm.menuButton.setOnAction(e -> this.beginScherm.start(this.PrimaryStage));
+        this.optieScherm.helpButton.setOnAction(e -> this.onHelpButton());
     }
 
     private void bindSpelerNaamScherm(){
@@ -133,6 +138,28 @@ public class MainProgram extends Application {
     private void onVolgendeButton(){
         this.spelerNaamScherm.start(this.PrimaryStage);
         this.spelerNaamScherm.vulScherm(this.optieScherm.players);
+    }
+
+    private void onHelpButton(){
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(this.PrimaryStage);
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.setAlignment(Pos.CENTER);
+        dialogVbox.getChildren().add(this.optieDialogText());
+        Scene dialogScene = new Scene(dialogVbox, 700, 200);
+        dialog.setScene(dialogScene);
+        dialog.showAndWait();
+    }
+
+    private Text optieDialogText(){
+        return new Text(
+                "Spelers: \t\tselecteer het aantal spelers dat mee speelt, als er 2 of meer spelers\n" + "" +
+                        "\t\t\tmeedoen is er de optie om bij het invoeren van de namen te selecteeren\n" +
+                        "\t\t\tof een woord door meerdere spelers kan worden geraden of door een.\n\n"+
+                        "Bord grote: \tde grote van het spelbord, 4 bij 4 (16) tegels of 5 bij 5 (25) tegels.\n\n" +
+                        "Tijd: \t\t\tde tijd die iedere speler krijgt om woorden te maken."
+        );
     }
 
     private void doTime(){
